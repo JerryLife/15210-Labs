@@ -111,7 +111,7 @@ struct
 
   fun testMST () =
     let
-      val tests = List.map (fixCase o (fn (E, n) => (% E, n))) Tests.testsMST
+      val tests = List.filter (fn (_,n)=> n <> 0) (List.map (fixCase o (fn (E, n) => (% E, n))) Tests.testsMST)      
       val _ = Tester.testGroup checker1 logger tests 
       val _ = print "*** We will now use Mr. Gou's solution to test yours again. *** \n"
       val _ = Tester.testGroup checker2 logger tests 

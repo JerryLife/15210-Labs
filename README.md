@@ -8,4 +8,4 @@ You may consult the hint in this repo written by [azure-crab](https://github.com
 
 The tester code for abridged lab and one of the two reference solutions provided for the segment lab is available by courtesy of [FluorineDog](https://github.com/FluorineDog).
 
-Known issues: The second reference solution for MST will not terminate on the test case ([],0).
+Known issues: The second reference solution for MST will not terminate on the test case ([],0).（RESOLVED)

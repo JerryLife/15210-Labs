@@ -1,0 +1,51 @@
+functor MkBabble(structure R : RANDOM210
+                 structure KS : KGRAM_STATS
+                 structure Util : SEQUENCE_UTIL
+                 sharing KS.Seq = Util.Seq
+                 sharing KS.Seq = R.Seq) : BABBLE =
+struct
+  structure Rand = R
+  structure Stats = KS
+  open Stats.Seq
+	   
+  exception NoData
+
+  (* Remove this line when you're done. *)
+  exception NotYetImplemented
+
+  fun randomSentence (stats : KS.kgramstats) (n : int) (seed : R.rand) =
+    if(n > KS.maxK(stats)) then
+     raise NoData
+    else
+	let
+	    val determineRandom = R.randomRealSeq seed NONE n
+	    fun genKGram (gram,randomNum) = 
+      let 
+      val result = append(gram,singleton(Util.choose (KS.lookupExts stats gram) randomNum))
+      in
+      result
+      end
+	    val result = iter genKGram (empty()) determineRandom
+	    fun resultWithSpaces i = if(i mod 2 = 0) then (nth result (i div 2))
+				     else " "
+	    val finalResult = tabulate resultWithSpaces (2* (length result) - 1)
+	    val punctuatedFinal = append (finalResult, singleton("."))
+	in
+	    String.concatWith "" (toList(punctuatedFinal))
+	end
+	    		     
+
+  fun randomDocument (stats : KS.kgramstats) (n : int) (seed : R.rand) =
+    if (KS.maxK(stats)<5) then 
+    raise NoData
+    else
+      let
+        val maxLength = if(KS.maxK(stats)>10) then 10 else KS.maxK(stats)
+        val wordLengths = R.randomIntSeq seed (SOME (5,maxLength+1)) n
+	val Seeds = R.randomIntSeq seed (SOME (1,10000)) n
+        val document = tabulate (fn i=>randomSentence stats (nth wordLengths i) (R.fromInt (nth Seeds i))) n 
+      in
+        String.concatWith "" (toList(document))
+      end
+end
+

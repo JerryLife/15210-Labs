@@ -1,0 +1,48 @@
+functor MkBigNumMultiply(structure BNA : BIGNUM_ADD
+                         structure BNS : BIGNUM_SUBTRACT
+                         sharing BNA.Util = BNS.Util) : BIGNUM_MULTIPLY =
+struct
+  structure Util = BNA.Util
+  open Util
+  open Seq
+  open Primitives
+
+
+  infix 6 ++ --
+  infix 7 **
+
+  fun x ++ y = BNA.add (x, y)
+  fun x -- y = BNS.sub (x, y)
+  fun x ** y = 
+   if((length x = 0) orelse (length y = 0) ) then empty()
+   else if (length x = 1 ) then y
+   else if (length y = 1) then x
+   else
+   let
+    val digNumUncorr = Int.max(length x,length y)
+    val digNum = if(digNumUncorr mod 2 = 0) then digNumUncorr else (digNumUncorr + 1)
+    val mid = digNum div 2
+    val p = if (mid >= length x) then empty() else (subseq x (mid,(length x)-mid))
+    val q = if (mid > length x) then x else (subseq x (0,mid))
+    val r = if (mid >= length y) then empty() else (subseq y (mid,(length y)-mid))
+    val s = if (mid > length y) then y else (subseq y (0,mid))
+    val p = if((length p = 1) andalso (nth p 0 = ZERO)) then empty() else p
+    val q = if((length q = 1) andalso (nth q 0 = ZERO)) then empty() else q
+    val r = if((length r = 1) andalso (nth r 0 = ZERO)) then empty() else r
+    val s = if((length s = 1) andalso (nth s 0 = ZERO)) then empty() else s
+    val (sumOne,sumTwo) = par(fn()=>p++q,fn()=>r++s)
+    val (high,inter,low) = par3(fn()=>p**r,fn()=>sumOne**sumTwo,fn()=>q**s)
+    val intermed = (inter--high)
+    val middle = intermed -- low
+    fun highShifter i = if (i <digNum) then ZERO
+                        else (nth high (i-digNum))
+    fun midShifter i = if (i < mid) then ZERO
+                      else (nth middle (i-mid))
+    val highShifted = if(length high = 0) then empty() else (tabulate highShifter (digNum+(length high))) 
+    val midShifted = if(length middle = 0) then empty() else (tabulate midShifter (mid+(length middle)))
+   in 
+    (highShifted++midShifted)++low
+   end
+	       
+  val mul = op**
+end

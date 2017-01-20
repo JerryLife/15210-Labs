@@ -1,0 +1,35 @@
+functor MkBruteForcePD(structure P : PAREN_PACKAGE) : PAREN_DIST =
+struct
+  structure P = P
+  open P
+  open Seq
+
+fun parenDist (parens :paren seq) : int option =
+  (* Remove this line when you're done. *)
+	let
+  fun parenMatch p = 
+	let fun pm ((NONE , _)| (SOME 0, CPAREN)) = NONE 
+	| pm (SOME c, CPAREN) = SOME (c-1) 
+	| pm (SOME c, OPAREN) = SOME (c+1) 
+	in 
+	iter pm (SOME 0) p = (SOME 0) 
+	end 
+	fun MatchLength parens i =
+	  if((i >= length parens-1) orelse (nth parens i = CPAREN)) then 0 
+		else 
+			let 
+			fun ending j =
+			  if (j > length parens-1) then 0 
+	      else if(parenMatch (subseq parens (i,j-i+1))) then (j-i-1)
+				else (ending (j+1)) 
+			in 
+			ending (i+1) 
+			end 
+  fun max [] = raise Empty 
+	|max [x] = x 
+	|max (x::xs) = if x > (max xs) then x else (max xs) 
+		in
+    if(parenMatch parens) then (SOME (max(toList(tabulate (MatchLength parens) (length parens)))))
+		else NONE 
+end
+end

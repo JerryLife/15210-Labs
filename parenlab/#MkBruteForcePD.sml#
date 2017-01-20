@@ -1,0 +1,23 @@
+functor MkBruteForcePD(structure P : PAREN_PACKAGE) : PAREN_DIST =
+struct
+  structure P = P
+  open P
+  open Seq
+
+  (* Remove this line when you're done. *)
+  exception NotYetImplemented
+
+  fun parenDist (parens : paren seq) : int option =
+    let
+	fun parenMatch p =
+	  let fun pm ((NONE , _)| (SOME 0, CPAREN)) = NONE
+		| pm (SOME c, CPAREN) = SOME (c-1)
+		| pm (SOME c, OPAREN) = SOME (c+1)
+	  in iter pm (SOME 0) p = (SOME 0)
+	  end
+        fun mdist ([],_) = 0
+	  | mdist (p,) = 
+
+	
+      raise NotYetImplemented
+end

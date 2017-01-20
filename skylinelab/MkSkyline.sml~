@@ -1,0 +1,63 @@
+functor MkSkyline(structure S : SEQUENCE) : SKYLINE =
+struct
+  structure Seq = S
+  open Primitives
+  open Seq
+
+  (* Remove this line when you're done. *)
+
+  fun skyline (buildings : (int * int * int) seq) : (int * int) seq =
+  if (length buildings = 0) then empty()
+    else
+	let
+	    fun first (i,_,_) = i
+	    fun firstTwo (i,_) = i
+	    fun second (_,i,_) = i
+	    fun secondTwo (_,i) = i
+	    fun third (_,_,i) = i
+	    fun skylineSortWithIndices (lower:int,higher:int):(int * int) seq =
+		(*base cases*)
+	      if (higher - lower = 0) then empty()
+	      else if (higher - lower = 1) then
+		  let
+		      val elem = nth buildings lower
+		  in
+		      append (singleton ((first elem),(second elem)),singleton ((third elem),0))
+		  end
+	      else
+	          let 
+		      val (lowUnm,highUnm) = par(fn()=>skylineSortWithIndices(lower,(lower+higher) div 2),fn()=>skylineSortWithIndices((lower+higher) div 2,higher))
+			  (*zip the results with indicators of their source: ~1 means lower part,1 indicates higher*)
+		      fun left i = ~1
+		      fun right i = 1
+			  val a = tabulate left (length lowUnm)
+			  val b = tabulate right (length highUnm)
+		      val low = zip lowUnm a
+		      val high = zip highUnm b
+			  (*sort*)
+			  fun compare (((a,_),_),((b,_),_)) = Int.compare (a,b)
+	          val beforeCombine = merge compare low high
+			  (*copy scan for two skylines*)
+			  fun leftScanner ((a:(int*int)*int),(b:(int*int)*int)) = if(secondTwo b = ~1) then b
+			  else ((firstTwo (firstTwo b),secondTwo (firstTwo a)),secondTwo a)
+			  fun rightScanner ((a:(int*int)*int),(b:(int*int)*int)) = if(secondTwo b = 1) then b
+			  else ((firstTwo (firstTwo b),secondTwo (firstTwo a)),secondTwo a)
+			  val left = scani leftScanner ((0,0),1) beforeCombine
+			  val right = scani rightScanner ((0,0),~1) beforeCombine
+			  (*pick out the higher skyline*)
+			  fun pick i = if(i<0 orelse i >= length beforeCombine) then (0,0)
+			  else if (secondTwo (nth left i) = 1 orelse secondTwo (nth right i) = ~1) then (firstTwo (nth beforeCombine i))
+			  else (firstTwo (firstTwo (nth beforeCombine i)),Int.max((secondTwo (firstTwo (nth left i))),(secondTwo (firstTwo (nth right i)))))
+			  val withRepetitions = tabulate pick (length beforeCombine)
+			  (*remove repetitions*)
+			  fun noRepetition (0,a) = true
+			  |noRepetition (i,a) = if(i<length withRepetitions) then (secondTwo (nth withRepetitions i) <> secondTwo (nth withRepetitions (i-1)))
+			  else false
+			  val result = filterIdx noRepetition withRepetitions
+			   in
+		  	result
+end
+in
+skylineSortWithIndices (0,length buildings)
+end
+end

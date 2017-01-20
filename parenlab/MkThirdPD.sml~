@@ -1,0 +1,19 @@
+functor MkThirdPD(structure P: PAREN_PACKAGE) : PAREN_DIST =
+struct
+structure P = P
+open P
+open Seq
+fun parenDist(parens : paren seq) : int option =
+  let
+      fun mapper OPAREN = 1
+	| mapper CPAREN = -1
+      fun id i = i
+      val numSeq = map mapper parens
+      val posSeq = tabulate id length(numSeq)
+      val pairSeq = zip (numSeq,posSeq)
+      fun cond (0,_) = true
+	| cond (_,_) = false
+      val filteredSeq = filter cond pairSeq
+      fun second(_,i) = i
+      val positSeq = map second filterdSeq
+			 

@@ -57,9 +57,6 @@ struct
 	    (_,NONE,r)=>r
 	  | (_,SOME v,r) => join (singleton(low,v),r)
     end
-
-    fun iterih f b T = 
-    map ()
 						       
 
 end

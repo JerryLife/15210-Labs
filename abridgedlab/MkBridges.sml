@@ -28,7 +28,6 @@ struct
             val toVisit = filter (fn v=> v<> p) (nth G v)
             val (fixB,fixX,fixc,fixm) = iter (DFS v) (B,updX,c+1,(length G)) toVisit
             val finalB = if p<>v andalso fixm >= c then (STSeq.update (v,singleton((p,v))) fixB) else fixB
-            val _ = print "hello" before updX
             in (finalB,fixX,fixc,Int.min(m,fixm)) end
        val Vert = tabulate (fn i=>i) (length G)
        val X = STSeq.fromSeq (tabulate (fn _=>NONE) (length G))

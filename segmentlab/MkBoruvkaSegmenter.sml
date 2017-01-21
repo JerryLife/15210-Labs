@@ -28,7 +28,7 @@ struct
       val updUF = map (fn v => nth P v) P
       val revConts = collect Int.compare (map (fn (s,(d,w))=>(d,(s,w))) contractions)
       val deltas = map (fn (d,p) => (d,reduce op+ 0 (map (fn (_,w)=>w) p))) revConts
-      val minCreds = map (fn (d,p) => (d,reduce Int.min initial_credit (map (fn (s,w)=>nth C s - w) p))) revConts
+      val minCreds = map (fn (d,p) => (d,（Int.min(nth C d,reduce Int.min initial_credit (map (fn (s,w)=>nth C s - w) p)))) revConts
       val updCreds = inject minCreds C
       val finalCreds = inject (map (fn (d,delt)=>(d,nth updCreds d - delt)) deltas) updCreds 
       val E' = map (fn (s,(d,w)) => ((nth updUF s),(nth updUF d,w))) Es
@@ -37,7 +37,7 @@ struct
     in 
       if (length Es = 0) then updUF else helper (updUF,finalE,finalCreds) (Rand.next s)
     end
-    val res = helper (verts,(map (fn (s,d,w) => (s,(d,w))) sorted),creds) (Rand.fromInt 15210)
+    val res = helper (verts,(map (fn (s,d,w) => (s,(d,w))) sorted),creds) (Rand.fromInt 2017)
   in
     map (fn v => nth res v) res
 end

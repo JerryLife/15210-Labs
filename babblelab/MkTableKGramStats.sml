@@ -13,6 +13,8 @@ struct
 			
   (* You must define the abstract kgramstats type *)
   type kgramstats =(int*((string hist) T.table))
+  (* We use the integer to keep track of maxK and maintain the histogram of next word for each k-gram, 
+  which can be returned by lookupExts just by finding the corresponding value *)
 
   fun makeStats (corpus : string) (maxK : int) : kgramstats =
     let
@@ -35,7 +37,7 @@ struct
     end
 
   fun lookupExts (stats : kgramstats) (kgram : kgram) : (token * int) seq = 
-	valOf (Table.find (#2(stats)) kgram)
+  getOpt ((Table.find (#2(stats)) kgram),empty())
 
   fun maxK (stats : kgramstats) : int =
       #1(stats)

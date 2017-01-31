@@ -18,14 +18,20 @@ struct
    * You may also add other tests, which use other corpi (corpuses?), but those
    * corpuses will not be submitted. *)
   val testsKGramStats : ((string * int) * (string list)) list = [
-    ((corpus, 8),
+    ((corpus, 50),
         ["direction",
          "time",
          "direction of time",
          "would write",
          "What Eddington says about",
          "British Museum",
-         "write all the books in the British Museum"
+         "write all the books in the British Museum",
+         (*Ending phrase*)"through his head",
+         (*Unique*)"Olaf",
+         "imperially slim",
+         (*Non-existent*)"what",
+         (*A Number of apperances*)"What",
+         (* Long and ending *)"So on we worked and waited for the light  And went without the meat and cursed the bread  And Richard Cory one calm summer night  Went home and put a bullet through his head"
          ])
   ]
 

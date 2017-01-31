@@ -34,15 +34,17 @@ struct
 	    String.concatWith "" (toList(punctuatedFinal))
 	end
 	    		     
-  fun randomDocument (stats : KS.kgramstats) (n : int) (seed : R.rand) =
+    fun randomDocument (stats : KS.kgramstats) (n : int) (seed : R.rand) =
     if (KS.maxK(stats)=0) then 
-    raise NoData
+      raise NoData
     else
       let
-	      val Seeds = R.randomIntSeq seed NONE n
+	    val Seeds = R.randomIntSeq seed NONE n
         val wordLengths = R.randomIntSeq (R.fromInt(nth Seeds 0)) (SOME (5,10)) n
-        val document = tabulate (fn i=>randomSentence stats (nth wordLengths i+1) (R.fromInt (nth Seeds i))) n
+        val document = flatten (tabulate (fn i=> fromList[(randomSentence stats (nth wordLengths i+1) (R.fromInt (nth Seeds i))), " "]) n)
+      	val finalDoc = take (document, (length document - 1))
       in
-        String.concatWith "" (toList(document))
+        String.concatWith "" (toList(finalDoc))
       end
+
 end

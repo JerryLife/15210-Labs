@@ -34,7 +34,7 @@ struct
       val aspInfo = makeASP T w1
       val result = report aspInfo w2
     in
-    result
+      result
     end
 
 end

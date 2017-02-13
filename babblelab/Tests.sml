@@ -31,7 +31,8 @@ struct
          "imperially slim",
          (*Non-existent*)"what",
          (*A Number of apperances*)"What",
-         (* Long and ending *)"So on we worked and waited for the light  And went without the meat and cursed the bread  And Richard Cory one calm summer night  Went home and put a bullet through his head"
+         (* Long and ending *)"So on we worked and waited for the light  And went without the meat and cursed the bread  And Richard Cory one calm summer night  Went home and put a bullet through his head",
+         (*Empty*)""
          ])
   ]
 

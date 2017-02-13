@@ -12,6 +12,8 @@ struct
    *)
   type graph = (((Set.set) table)*int*int)
   type asp = (Set.set) table
+  (*Graph is represented by adjacency table; the number of edges and of vertices are kept for fast lookup *)
+  (*ASP is a graph consisting of only the edges on the shortest paths.*)
 
   (* Task 2.1 *)
   fun makeGraph (E : edge seq) : graph =
